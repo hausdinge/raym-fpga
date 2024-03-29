@@ -1,2 +1,2 @@
-# raym-fpga
+# Ray Marching on FPGAs
 ## for review
