@@ -1,11 +1,6 @@
 `timescale 1ns / 1ps
 //`default_nettype none
 
-// HDMI, DVI Controller based on :
-// Project F: Display Controller DVI Demo
-// (C)2020 Will Green, Open source hardware released under the MIT License
-// Learn more at https://projectf.io
-
 module display_demo_dvi(
     input  wire CLK,                // board clock: 100 MHz on Arty/Basys3/Nexys
     input  wire btnc, btnd, btnl, btnr, btnu, sw0, sw1,
@@ -195,3 +190,6 @@ module display_demo_dvi(
     assign hdmi_tx_rsda  = 1'bz;
     assign hdmi_tx_rscl  = 1'b1;
 endmodule
+
+// The code used for the HDMI output is from https://projectf.io
+// Project F: Display Controller DVI Demo
