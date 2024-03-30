@@ -1,10 +1,6 @@
 `timescale 1ns / 1ps
 //`default_nettype none
 
-// Project F: Display Timings
-// (C)2019 Will Green, Open Source Hardware released under the MIT License
-// Learn more at https://projectf.io
-
 // Defaults to 640x480 at 60 Hz
 
 module display_timings #(

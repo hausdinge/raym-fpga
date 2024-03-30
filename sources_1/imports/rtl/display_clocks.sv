@@ -1,10 +1,6 @@
 `timescale 1ns / 1ps
 //`default_nettype none
 
-// Project F: Display Clocks
-// (C)2019 Will Green, Open source hardware released under the MIT License
-// Learn more at https://projectf.io
-
 // Defaults to 25.2 and 126 MHz for 640x480 at 60 Hz
 
 module display_clocks #(
