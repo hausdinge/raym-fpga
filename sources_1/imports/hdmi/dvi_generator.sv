@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-//`default_nettype none
 
 module dvi_generator(
     input  wire i_pix_clk,          // pixel clock
@@ -86,5 +85,4 @@ module dvi_generator(
         .i_data(10'b0000011111),
         .o_data(o_tmds_chc_serial)
     );
-
 endmodule

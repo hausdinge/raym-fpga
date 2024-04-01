@@ -1,8 +1,6 @@
 `timescale 1ns / 1ps
-//`default_nettype none
 
 // Defaults to 25.2 and 126 MHz for 640x480 at 60 Hz
-
 module display_clocks #(
     MULT_MASTER=31.5,       // master clock multiplier (2.000-64.000)
     DIV_MASTER=5,           // master clock divider (1-106)
@@ -88,5 +86,4 @@ module display_clocks #(
     // explicitly buffer output clocks
     BUFG bufg_clk_pix(.I(clk_1x_pre), .O(o_clk_1x));
     BUFG bufg_clk_pix_5x(.I(clk_5x_pre), .O(o_clk_5x));
-
 endmodule

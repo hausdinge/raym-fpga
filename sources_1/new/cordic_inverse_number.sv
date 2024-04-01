@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-//latency: width + 7 = 39 clock cycles
+//latency: width + 7 = 35 clock cycles
 module cordic_inverse_number(
 input logic in_valid, 
 input logic clk, 
@@ -9,7 +9,8 @@ output fixedpoint::number inv,
 output logic out_valid
 );
 
-  localparam width = 32;
+  // CORDIC pipeline stages.
+  localparam width = 28;
   
   fixedpoint::number x [0:width-1];
   fixedpoint::number y [0:width-1];
@@ -38,25 +39,26 @@ output logic out_valid
   end
   
   always_ff @(posedge clk) begin
-    if(valid_leadingone) begin
-      back_shift[0] <= fixedpoint::fractional_bits - leadingone_index;
-      x[0] <= (shift >= 0) ? (num1_reg[6]<< shift) : (num1_reg[6]>> (-shift));
-      y[0] <= fixedpoint::fromInt(1);
-      z[0] <= 0;
-      
-      for(int i = 0; i < width-1; i++) begin
-        x[i+1] <= x[i];
-        y[i+1] <= y[i][64] == 1 ? y[i] + (x[i] >>> i) : y[i] - (x[i] >>> i);
-        z[i+1] <= y[i][64] == 1 ? z[i] - (fixedpoint::fromInt(1)>>>i) :  z[i] + (fixedpoint::fromInt(1)>>>i);
-        back_shift[i+1] <= back_shift[i];
-      end 
-    end
+    // normalize number
+    back_shift[0] <= fixedpoint::fractional_bits - leadingone_index;
+    x[0] <= (shift >= 0) ? (num1_reg[6] << shift) : (num1_reg[6] >> (-shift));
+    y[0] <= fixedpoint::fromInt(1);
+    z[0] <= 0;
+    
+    // perform CORDIC.
+    for(int i = 0; i < width-1; i++) begin
+      x[i+1] <= x[i];
+      y[i+1] <= y[i][fixedpoint::total_bits-1] == 1 ? y[i] + (x[i] >> i) : y[i] - (x[i] >> i);
+      z[i+1] <= y[i][fixedpoint::total_bits-1] == 1 ? z[i] - (fixedpoint::fromInt(1)>>i) :  z[i] + (fixedpoint::fromInt(1)>>i);
+      back_shift[i+1] <= back_shift[i];
+    end 
   end
   
   always_comb begin
     inv = 1'b0;
     out_valid = 1'b0;
     if(out_valid_reg[width+6]) begin
+      // denormalize number.
       inv = (back_shift[width-1] >= 0) ? z[width-1] << (back_shift[width-1]) : z[width-1] >> (-back_shift[width-1]);
       out_valid = out_valid_reg[width+6];
     end

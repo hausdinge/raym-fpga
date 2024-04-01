@@ -1,6 +1,7 @@
 `timescale 1ns / 1ps
 
-//latency: 7 clock cycles
+// latency: 7 clock cycles
+// other version of leading one index finder.
 module fixedpoint_MSB_index2(input logic in_valid, input logic clk, input fixedpoint::number n1, output logic [5:0] idx, output logic out_valid);
   fixedpoint::number n2;
   

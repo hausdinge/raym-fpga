@@ -1,7 +1,15 @@
 `timescale 1ns / 1ps
 
-//latency: 30 clock cycles
-module mb_dr_zr (input logic in_valid, input logic clk, input fixedpoint::message data_in, output fixedpoint::message data_out, output logic out_valid);
+// latency: 30 clock cycles
+module mb_dr_zr (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::message data_in, 
+output fixedpoint::message data_out, 
+output logic out_valid
+);
+
+  // num clock cycles dr_zr
   localparam pipelen = 29;
   
   fixedpoint::message msg_reg [0:pipelen-1];
@@ -52,6 +60,7 @@ module mb_dr_zr (input logic in_valid, input logic clk, input fixedpoint::messag
     end
   end
   
+  // scale_rotate_derivative
   dr_zr drzr (in_valid, clk, data_in.r, data_in.dr, zr, dr, valid1);
   
   always_comb begin

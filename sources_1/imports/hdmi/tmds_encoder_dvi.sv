@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-//`default_nettype none
 
 module tmds_encoder_dvi(
     input  wire i_clk,          // clock

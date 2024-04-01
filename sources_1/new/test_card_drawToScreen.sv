@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 
+// Only some tests to draw something on the screen.
 module test_card_drawToScreen#(
 H_RES = 640, 
 V_RES = 480
@@ -38,10 +39,10 @@ output logic [19:0] framebuffer_addr
   end
   
   always_ff @(posedge clk) begin
-    if(x == 1277 && y == 0) begin
+    if(x == 0) begin
       we_reg <= 1;
       mem_addr_reg <= flat;
-      pixel_color <= 2;
+      pixel_color <= 15;
     end
     else begin
       we_reg <= 0;

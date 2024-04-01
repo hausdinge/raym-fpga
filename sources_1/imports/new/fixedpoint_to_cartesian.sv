@@ -1,9 +1,18 @@
 `timescale 1ns / 1ps
 
-// Base: 24
 // latency: 2*width = 84
-module fixedpoint_to_cartesian (input logic in_valid, input logic clk, input fixedpoint::number theta, input fixedpoint::number phi,
-input fixedpoint::number r, output fixedpoint::number x, output fixedpoint::number y, output fixedpoint::number z, output logic out_valid);
+// convert spherical to 3D Cartesian coordinates.
+module fixedpoint_to_cartesian (
+input logic in_valid, input 
+logic clk, 
+input fixedpoint::number theta, 
+input fixedpoint::number phi,
+input fixedpoint::number r, 
+output fixedpoint::number x, 
+output fixedpoint::number y, 
+output fixedpoint::number z, 
+output logic out_valid
+);
   
   //width = num clock cycles of fixedpoint_sin_cos
   localparam width = 42;
@@ -16,7 +25,6 @@ input fixedpoint::number r, output fixedpoint::number x, output fixedpoint::numb
   fixedpoint::number out_rsin_sin;
   fixedpoint::number out_rsin_cos;
   
-  
   always_ff @(posedge clk) begin
     if(in_valid) begin
       phi_reg[0] <= phi;
@@ -28,6 +36,7 @@ input fixedpoint::number r, output fixedpoint::number x, output fixedpoint::numb
     end
   end
   
+  // apply CORDIC to Cartesian two times.
   fixedpoint_sin_cos sc1 (in_valid, clk, r, theta, out_rsin, out_rcos[0], valid1);
   fixedpoint_sin_cos sc2 (valid1, clk, out_rsin, phi_reg[width-1], out_rsin_sin, out_rsin_cos, valid2); 
   

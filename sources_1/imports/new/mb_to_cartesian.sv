@@ -1,9 +1,17 @@
 `timescale 1ns / 1ps
 
-//latency: piplen + 1 =  69 clock cycles
-module mb_to_cartesian (input logic in_valid, input logic clk, input fixedpoint::message data_in, output fixedpoint::message data_out, output logic out_valid);
+// latency: piplen + 1 =  85 clock cycles
+// the conversion to 3D Cartesian coordinates
+// is applied on the data-bus. 
+module mb_to_cartesian (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::message data_in, 
+output fixedpoint::message data_out, 
+output logic out_valid
+);
   
-  //pipelen = num clock cycles of fixedpoint_to_cartesian
+  // pipelen = num clock cycles of fixedpoint_to_cartesian.
   localparam pipelen = 84;
   
   fixedpoint::message msg_reg [0:pipelen-1];
@@ -55,6 +63,7 @@ module mb_to_cartesian (input logic in_valid, input logic clk, input fixedpoint:
     end
   end
   
+  // CORDIC_to_cartesian.
   fixedpoint_to_cartesian tc (in_valid, clk, data_in.theta, data_in.phi, data_in.zr, x_iter, y_iter, z_iter, valid1);
   
   always_comb begin

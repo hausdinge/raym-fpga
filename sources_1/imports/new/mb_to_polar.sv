@@ -1,7 +1,15 @@
 `timescale 1ns / 1ps
 
-//latency: width + 1 = 59 
-module mb_to_polar (input logic in_valid, input logic clk, input fixedpoint::message data_in, output fixedpoint::message data_out, output logic out_valid);
+// latency: width + 1 = 75
+// the conversion to 3D polar (spherical) coordinates
+// is applied on the data-bus. 
+module mb_to_polar (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::message data_in, 
+output fixedpoint::message data_out, 
+output logic out_valid
+);
   
   //width = num clock cycles of fixedpoint_to_polar
   localparam width = 74;
@@ -32,6 +40,7 @@ module mb_to_polar (input logic in_valid, input logic clk, input fixedpoint::mes
         res.y_iter <= msg_reg[width-1].y_iter;
         res.z_iter <= msg_reg[width-1].z_iter;
         
+        // we set threshold to 1 when the escape radius is exeeded. 
         res.steps <= !msg_reg[width-1].threshold ? msg_reg[width-1].steps + 1 : msg_reg[width-1].steps;
         res.r <= !msg_reg[width-1].threshold ? new_r : msg_reg[width-1].r;
         res.dr <= msg_reg[width-1].dr;
@@ -52,12 +61,14 @@ module mb_to_polar (input logic in_valid, input logic clk, input fixedpoint::mes
         res.epsilon <= msg_reg[width-1].epsilon;
         res.mb_iter <= msg_reg[width-1].mb_iter;
         
+        // Check if the escape radius is exeeded.
         res.threshold <= (new_r > (fixedpoint::fromfrac #(1)::fp(1, 1'b1))) ? 1 : msg_reg[width-1].threshold;
         
       end
     end
   end
   
+  // CORDIC_to_polar
   fixedpoint_to_polar tp (in_valid, clk, data_in.x_iter, data_in.y_iter, data_in.z_iter, theta, phi, new_r, valid1);
   
   always_comb begin

@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-//latency: width + 7 = 39 clock cycles
+//latency: width + 7 = 35 clock cycles
 module bkm_log2(
 input logic in_valid, 
 input logic clk, 
@@ -10,7 +10,7 @@ output logic out_valid
 );
 
   // BKM pipeline stages
-  localparam width = 32;
+  localparam width = 28;
   
   // log2(1+2^(-n))
   fixedpoint::number log2_table [0:width-1] = '{
@@ -41,14 +41,15 @@ output logic out_valid
     65'b00000000000000000000000000000000000000000000000000000000101110001,
     65'b00000000000000000000000000000000000000000000000000000000010111000,
     65'b00000000000000000000000000000000000000000000000000000000001011100,
-    65'b00000000000000000000000000000000000000000000000000000000000101110,
-    65'b00000000000000000000000000000000000000000000000000000000000010111,
+    65'b00000000000000000000000000000000000000000000000000000000000101110
+    /*65'b00000000000000000000000000000000000000000000000000000000000010111,
     65'b00000000000000000000000000000000000000000000000000000000000001011,
     65'b00000000000000000000000000000000000000000000000000000000000000101,
-    65'b00000000000000000000000000000000000000000000000000000000000000010
+    65'b00000000000000000000000000000000000000000000000000000000000000010*/
   };
   
   fixedpoint::number x [0:width-1];
+  fixedpoint::number z [0:width-1];
   fixedpoint::number y [0:width-1];
   fixedpoint::number val [0:width-1];
   fixedpoint::number num1_reg [0:6];
@@ -76,19 +77,17 @@ output logic out_valid
     end
   end
   
-  // perform BKM algorithm to find log2(x)
+  // perform BKM algorithm to find log2(val)
   always_ff @(posedge clk) begin
-    if(valid_leadingone) begin
-      back_shift[0] <= fixedpoint::fractional_bits - leadingone_index;
-      x[0] <= fixedpoint::fromInt(1);  
-      y[0] <= 0;                       
-      val[0] <= (shift >= 0) ? (num1_reg[6]<< shift) : (num1_reg[6]>> (-shift));
-      for(int i = 0; i < width-1; i++) begin
-        x[i+1] <= ((x[i]  + (x[i]>>i)) <= val[i]) ? (x[i]  + (x[i]>>i)) : x[i];
-        y[i+1] <= ((x[i]  + (x[i]>>i)) <= val[i]) ? y[i] + log2_table[i] : y[i];
-        val[i+1] <= val[i];
-        back_shift[i+1] <= back_shift[i];
-      end 
+    back_shift[0] <= fixedpoint::fractional_bits - leadingone_index;
+    x[0] <= fixedpoint::fromInt(1);  
+    y[0] <= 0;                       
+    val[0] <= (shift >= 0) ? (num1_reg[6]<< shift) : (num1_reg[6]>> (-shift));
+    for(int i = 0; i < width-1; i++) begin
+      x[i+1] <= ((x[i]  + (x[i]>>i)) <= val[i]) ? (x[i]  + (x[i]>>i)) : x[i];
+      y[i+1] <= ((x[i]  + (x[i]>>i)) <= val[i]) ? y[i] + log2_table[i] : y[i];
+      val[i+1] <= val[i];
+      back_shift[i+1] <= back_shift[i];
     end
   end
   

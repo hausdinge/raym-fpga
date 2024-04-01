@@ -1,10 +1,22 @@
 `timescale 1ns / 1ps
-// Default widht: 9
-//lateny: widht + 9 = 37
-module fixedpoint_arctan2 (input logic in_valid, input logic clk, input fixedpoint::number n_y, input fixedpoint::number n_x, output fixedpoint::number atan2, 
-output fixedpoint::number r, output logic out_valid);
-  //Cordic version
+
+// calculates the magnitude r of a point (n_x, n_y) and the angle of 
+// the vector. Conversion from 2D Cartesian to 2D polar coordinates.
+// lateny: widht + lantency_mult = 37
+module fixedpoint_arctan2 (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::number n_y, 
+input fixedpoint::number n_x, 
+output fixedpoint::number atan2, 
+output fixedpoint::number r, 
+output logic out_valid
+);
+  // CORDIC iteration count.
   localparam widht = 28;
+  
+  // lantency of any multiplyer for the CORDIC gain mult.
+  localparam lantency_mult = 9;
   
   //store values for arctan(2^-k) values
   fixedpoint::number arctan_table [0:widht-1] = '{
@@ -50,42 +62,45 @@ output fixedpoint::number r, output logic out_valid);
   fixedpoint::number y [0:widht-1];
   fixedpoint::number z [0:widht-1];
   
-  fixedpoint::number z_delayed [0:8];
-  logic [widht+8:0] out_valid_reg = 0;
+  fixedpoint::number z_delayed [0:lantency_mult-1];
+  logic [widht+(lantency_mult-1):0] out_valid_reg = 0;
   
   logic valid0;
   fixedpoint::number scale_x;
+  
+  // multiply with inv-CORDIC gain
   fixedpoint_mult fmatan2scale (in_valid, clk, x[widht-1], scale_factor, scale_x, valid0);
   
   always_ff @(posedge clk) begin
-    // rotate the input vectors to the correct quadrant
+    // rotate the input vectors to the correct quadrant. We want the
+    // full angle for arctan2.
     if(in_valid) begin
-      if(n_x[64] == 0 && n_y[64] == 0) begin
+      if(n_x[fixedpoint::total_bits-1] == 0 && n_y[fixedpoint::total_bits-1] == 0) begin
         x[0] <= n_x;
         y[0] <= n_y;
         z[0] <= 0;
       end
-      if(n_x[64] == 1 && n_y[64] == 0) begin
+      if(n_x[fixedpoint::total_bits-1] == 1 && n_y[fixedpoint::total_bits-1] == 0) begin
         x[0] <= n_y;
         y[0] <= -n_x;
         z[0] <= pi_half;
       end
-      if(n_x[64] == 1 && n_y[64] == 1) begin
+      if(n_x[fixedpoint::total_bits-1] == 1 && n_y[fixedpoint::total_bits-1] == 1) begin
         x[0] <= -n_x;
         y[0] <= -n_y;
         z[0] <= -pi;
       end
-      if(n_x[64] == 0 && n_y[64] == 1) begin
+      if(n_x[fixedpoint::total_bits-1] == 0 && n_y[fixedpoint::total_bits-1] == 1) begin
         x[0] <= -n_y;
         y[0] <= n_x;
         z[0] <= -pi_half;
       end
       
-      //make cordic iteration
+      // make CORDIC iteration
       for(int i = 0; i < widht-1; i++) begin
-        x[i+1] <= y[i][64] == 1 ? x[i] - (y[i] >>> i) : x[i] + (y[i] >>> i);
-        y[i+1] <= y[i][64] == 1 ? y[i] + (x[i] >>> i) : y[i] - (x[i] >>> i);
-        z[i+1] <= y[i][64] == 1 ? z[i] - arctan_table[i] :  z[i] + arctan_table[i];
+        x[i+1] <= y[i][fixedpoint::total_bits-1] == 1 ? x[i] - (y[i] >>> i) : x[i] + (y[i] >>> i);
+        y[i+1] <= y[i][fixedpoint::total_bits-1] == 1 ? y[i] + (x[i] >>> i) : y[i] - (x[i] >>> i);
+        z[i+1] <= y[i][fixedpoint::total_bits-1] == 1 ? z[i] - arctan_table[i] :  z[i] + arctan_table[i];
       end 
     end
   end
@@ -93,7 +108,7 @@ output fixedpoint::number r, output logic out_valid);
   always_ff @(posedge clk) begin
     if(in_valid) begin
       z_delayed[0] <= z[widht-1];
-      for(int i = 0; i < 8; i++) begin
+      for(int i = 0; i < lantency_mult-1; i++) begin
          z_delayed[i+1] <= z_delayed[i];
       end 
       out_valid_reg <= (out_valid_reg << 1'b1) + 1'b1;
@@ -104,9 +119,9 @@ output fixedpoint::number r, output logic out_valid);
     atan2 = 0;
     out_valid = 0;
     r = 0;
-    if(out_valid_reg[widht+8]) begin
+    if(out_valid_reg[widht+(lantency_mult-1)]) begin
       r = scale_x;
-      atan2 = z_delayed[8];
+      atan2 = z_delayed[lantency_mult-1];
       out_valid = 1'b1;
     end
   end

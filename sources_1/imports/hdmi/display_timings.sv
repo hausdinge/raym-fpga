@@ -1,7 +1,4 @@
 `timescale 1ns / 1ps
-//`default_nettype none
-
-// Defaults to 640x480 at 60 Hz
 
 module display_timings #(
     H_RES=640,                      // horizontal resolution (pixels)

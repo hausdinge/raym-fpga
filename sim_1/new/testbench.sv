@@ -24,11 +24,11 @@ end
 //fixedpoint_log2 lg2 (1'b1, clk, num1, num2, valid);
 
 //approx_mult, complete
-//fixedpoint::number num1 = fixedpoint::fromfrac #(12)::fp(0, 12'b000000000011);
-//fixedpoint::number num2 = fixedpoint::fromfrac #(8)::fp(0, 8'b00001101,1);
-//fixedpoint::number prod;
-//logic valid; 
-//mult_alt fms (1'b1, clk, num1, num2, prod, valid);
+fixedpoint::number num1 = fixedpoint::fromfrac #(12)::fp(2, 12'b000000000011);
+fixedpoint::number num2 = fixedpoint::fromfrac #(8)::fp(2, 8'b00001101,1);
+fixedpoint::number prod;
+logic valid; 
+approximate_multiplier fms (1'b1, clk, num1, num2, prod, valid);
 
 
 //arctan2, complete
@@ -95,7 +95,7 @@ end
 //bkm_log2 bkmlog2 (1'b1, clk, num1, log2, valid);
 
 // cordic inverse number
-//fixedpoint::number num1 = fixedpoint::fromfrac #(12)::fp(1, 12'b000000000000,1);
+//fixedpoint::number num1 = fixedpoint::fromfrac #(12)::fp(1, 12'b000000000000);
 //fixedpoint::number inv;
 //logic valid;
 //cordic_inverse_number cinv (1'b1, clk, num1, inv, valid);
@@ -116,7 +116,7 @@ end
 //    num1 <= fixedpoint::fromfrac #(12)::fp(2, 12'b000000000000);
 //  end
 //  if(cnt == 1) begin
-//  num1 <= fixedpoint::fromfrac #(12)::fp(0, 12'b001000000000);
+//  num1 <= fixedpoint::fromfrac #(12)::fp(16, 12'b000000000000);
 //  end
 //  if(cnt == 2) begin
 //  num1 <= fixedpoint::fromfrac #(12)::fp(4, 12'b000000000000);

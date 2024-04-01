@@ -1,11 +1,20 @@
 `timescale 1ns / 1ps
 
-// Base: 14
 // latency: 2*width = 74
-module fixedpoint_to_polar (input logic in_valid, input logic clk, input fixedpoint::number x, input fixedpoint::number y,
-input fixedpoint::number z, output fixedpoint::number theta, output fixedpoint::number phi, output fixedpoint::number r, output logic out_valid);
+// convert a 3D Cartesian point to 3D polar (spherical coordinates).
+module fixedpoint_to_polar (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::number x, 
+input fixedpoint::number y,
+input fixedpoint::number z, 
+output fixedpoint::number theta, 
+output fixedpoint::number phi, 
+output fixedpoint::number r, 
+output logic out_valid
+);
 
-  //width = num clock cycles of fixedpoint_arctan2
+  // width = num clock cycles of fixedpoint_arctan2
   localparam width = 37;
 
   fixedpoint::number z_reg[width-1:0];
@@ -27,6 +36,7 @@ input fixedpoint::number z, output fixedpoint::number theta, output fixedpoint::
     end
   end
   
+  // apply CORDIC to polar two times.
   fixedpoint_arctan2 act1 (in_valid, clk, y, x, phi_reg[0], r2D_reg, valid_1);
   fixedpoint_arctan2 act2 (valid_1, clk, r2D_reg, z_reg[width-1], theta_reg, r3D_reg, valid_2);
   

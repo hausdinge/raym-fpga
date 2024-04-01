@@ -1,14 +1,22 @@
 `timescale 1ns / 1ps
 
-// Default widht: 10
 // latency: width + 14 = 42
-module fixedpoint_sin_cos (input logic in_valid, input logic clk, 
-input fixedpoint::number scale, input fixedpoint::number angle, output fixedpoint::number sin, output fixedpoint::number cos, output logic out_valid);
+// convert a 2D polar point to 2D Cartesian coordinates.
+// scale is the magnitude.
+module fixedpoint_sin_cos (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::number scale, 
+input fixedpoint::number angle, 
+output fixedpoint::number sin, 
+output fixedpoint::number cos, 
+output logic out_valid
+);
   
-  //Cordic version
+  // CORDIC iterations.
   localparam widht = 28;
   
-  //store values for arctan(2^-k) values
+  // store values for arctan(2^-k) values.
   fixedpoint::number arctan_table [0:widht-1] = '{
     65'b00000000000000000000000000000000011001001000011111101101010100010,
     65'b00000000000000000000000000000000001110110101100011001110000010101,
@@ -59,7 +67,7 @@ input fixedpoint::number scale, input fixedpoint::number angle, output fixedpoin
   logic signed [58:0] out_times_two_pi;
   logic signed [58:0] out_times_scale_factor;
   
-  //back-shift: 18 signed 
+  // back-shift: 18 signed 
   mult_35_24_core times_two_pi (
     .CLK(clk),                         // input wire CLK
     .A(res[4]>>>3),                    // input wire [34 : 0] A
@@ -68,7 +76,7 @@ input fixedpoint::number scale, input fixedpoint::number angle, output fixedpoin
     .P(out_times_two_pi)               // output wire [58 : 0] P
   );
 
-  //back-shift: 23 signed
+  // back-shift: 23 signed
   mult_35_24_core times_inv_two_pi (
     .CLK(clk),                         
     .A(res[1]>>>3),                        
@@ -77,7 +85,7 @@ input fixedpoint::number scale, input fixedpoint::number angle, output fixedpoin
     .P(out_times_inv_two_pi)      
   );
 
-  //back-shift: 21 signed
+  // back-shift: 21 signed
   mult_35_24_core times_scale_factor (
     .CLK(clk),  
     .A(scale>>>3),      
@@ -97,7 +105,7 @@ input fixedpoint::number scale, input fixedpoint::number angle, output fixedpoin
       res[2] <= out_times_inv_two_pi>>>23;
       res[3] <= res[2][31:0];
       
-      
+      // shift the angle to the correct quadrant.
       if(res[3][31:30] == 2'b00) begin
         res[4] <= res[3];
         cos_sign[0] <= 0;
@@ -134,6 +142,7 @@ input fixedpoint::number scale, input fixedpoint::number angle, output fixedpoin
     z[0] <= res[5];
     
     if(in_valid) begin
+      // make CORDIC iterations.
       for(int i = 0; i < widht-1; i++) begin
         x[i+1] <= z[i][64] == 1 ? x[i] + (y[i] >>> i) : x[i] - (y[i] >>> i);
         y[i+1] <= z[i][64] == 1 ? y[i] - (x[i] >>> i) : y[i] + (x[i] >>> i);

@@ -1,11 +1,14 @@
 `timescale 1ns / 1ps
 
+// this module writes the SDF data into a framebuffer.
+// Than we read out the framebuffer and display the data.
 module BRAM_to_HDMI #(
 H_RES = 640, 
 V_RES = 480
 )(
 input logic clk, 
 input logic pix_clk, 
+input logic lock,
 input logic signed [15:0] i_x, 
 input logic signed [15:0] i_y, 
 input logic en_write_framebuffer,
@@ -18,44 +21,36 @@ output logic [7:0] o_blue
 
   localparam resolution = H_RES*V_RES;
  
-  logic clka, clkb;
   logic [0:0] wea, web;
   logic [19:0] addra, addrb;
   logic [5:0] dina, dinb;
   logic [5:0] douta, doutb;
-  logic [19:0] addr_read_count = 1;
   
-  assign clka = clk;
   assign wea = en_write_framebuffer;
   assign addra = framebuffer_addr;
   assign dina = framebuffer_data;
      
-  assign clkb = pix_clk;
   assign web = 0;
   assign dinb = 0;
-  assign addrb =  (i_x >= 0) && (i_x < H_RES) && (i_y >= 0) && (i_y < V_RES) ?  H_RES*i_y+i_x: 999999;
   
+  // Not the best way but it is ok for the pix_clk speed.
+  assign addrb =  (i_x >= 0) && (i_x < H_RES) && (i_y >= 0) && (i_y < V_RES) ?  H_RES*i_y+i_x : 999999;
   
-  /*always_ff @(posedge clkb) begin
-    
-     addrb <=  (i_x >= 0) && (i_x < H_RES) && (i_y >= 0) && (i_y < V_RES) ?  H_RES*i_y+i_x: 999999;
-    //addr_read_count <= (i_x >= 0) && (i_x < H_RES) && (i_y >= 0) && (i_y < V_RES) ?  H_RES*i_y+i_x: addr_read_count;
-    //addrb <= (addr_read_count >= resolution + 1) ? (addr_read_count == resolution ? 0 : (addr_read_count == resolution + 1 ? 1 : 2)) : addr_read_count;
-  end*/
- 
+  // BRAM IP-Core used as a framebuffer 
   blk_mem_gen_0 framebuffer (
-   .clka(clka),    // input wire clka
+   .clka(clk),     // input wire clka
    .wea(wea),      // input wire [0 : 0] wea
    .addra(addra),  // input wire [19 : 0] addra
    .dina(dina),    // input wire [5 : 0] dina
    .douta(douta),  // output wire [5 : 0] douta
-   .clkb(clkb),    // input wire clkb
+   .clkb(pix_clk), // input wire clkb
    .web(web),      // input wire [0 : 0] web
    .addrb(addrb),  // input wire [19 : 0] addrb
    .dinb(dinb),    // input wire [5 : 0] dinb
    .doutb(doutb)   // output wire [5 : 0] doutb
   );
   
+  // We only store color IDs in the framebuffer.
   logic [23:0] rgb_table[0:23] = {
     24'h000000,
     24'h0b0b0b,

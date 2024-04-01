@@ -1,12 +1,32 @@
 `timescale 1ns / 1ps
 
-module ray_march(input logic clk, input logic BTNC, BTNU, BTND, BTNR, BTNL, sw0, sw1, output logic wea, output logic [19:0] mem_addr, output logic [5:0] rgb/*, output fixedpoint::message data_out*/);
+// general ray marcher.
+// the Mandelbulb SDF is used.
+module ray_march (
+input logic clk, 
+input logic 
+BTNC, // zoom in 0.1 steps
+BTNU, // zoom in 0.0001 steps 
+BTND, // zoom in 0.001 steps
+BTNR, // zoom out 0.1 steps
+BTNL, // zoom in 0.01 steps
+sw0,  // change resolution (ray march epsilon) 
+sw1,  // change color (not implemented in this version) 
+output logic wea,              // framebuffer write-en
+output logic [19:0] mem_addr,  // framebuffer addr
+output logic [5:0] rgb         // framebuffer color-ID
+);
+
+  // Camera position (x,y,z) = (3.0119199, -0.1121999, 0.1633999)
   fixedpoint::number camera_z = fixedpoint::fromfrac #(32)::fp(0, 32'b00101001110101001001010100011000);
   fixedpoint::number camera_y = fixedpoint::fromfrac #(32)::fp(0, 32'b00011100101110010010001110100010, 1);
   fixedpoint::number camera_x = fixedpoint::fromfrac #(32)::fp(3, 32'b00000011000011010011000001101010);
   
+  // screen coordinates (x, y)
   logic [10:0] x = 0;
   logic [10:0] y = 0;
+  
+  // flattened screen coordinates
   logic [19:0] flat = 0;
   
   logic [5:0] pixel_color = 0;
@@ -16,25 +36,33 @@ module ray_march(input logic clk, input logic BTNC, BTNU, BTND, BTNR, BTNL, sw0,
   
   //----------------------------------------ray generator-----------------------------------------------------------------
  
-  //localparam l_bound = 1;
+  // calculate the aspect ratio with a centered coordinate system.
+  // (lerp_bound, lerp_bound2) = ((720, 1280)*0.5)/720 = (0.5, 0.8888)
+  // we map (1280, 720) -> (0.8888, 0.5) with a linear interpolation with a mod counter.
+  // to specify a pixel region just add a offset to the bounds and/or make the bounds smaller.
   fixedpoint::number lerp_bound = fixedpoint::fromfrac #(1)::fp(0, 1'b1);
   fixedpoint::number lerp_bound2 = fixedpoint::fromfrac #(32)::fp(0, 32'b11100011100011100011100011100011);
-
-  fixedpoint:: number xmin = -lerp_bound2;//fixedpoint::fromInt(l_bound, 1); 
-  fixedpoint:: number xmax = lerp_bound2;//fixedpoint::fromInt(l_bound); 
-  fixedpoint:: number ymin = lerp_bound;//fixedpoint::fromInt(l_bound);
-  fixedpoint:: number ymax = -lerp_bound;//fixedpoint::fromInt(l_bound, 1);
-
+  
+  // convert to a standart coordinate system usually used in mathematics.
+  fixedpoint:: number xmin = -lerp_bound2;
+  fixedpoint:: number xmax = lerp_bound2;
+  fixedpoint:: number ymin = lerp_bound;
+  fixedpoint:: number ymax = -lerp_bound;
+  
+  // lerp const.
   fixedpoint::number t_x = fixedpoint::fromfrac #(32)::fp(0, 32'b00000000001100110011001100110011); // 1/1280
   fixedpoint::number t_y = fixedpoint::fromfrac #(32)::fp(0, 32'b00000000010110110000010110110000); // 1/1720
-
+  
+  // determine the stepsize for the modulo cnt.
   fixedpoint::number lerp_step_x = fixedpoint::mult(t_x, xmax - xmin);
   fixedpoint::number lerp_step_y = fixedpoint::mult(t_y, ymax - ymin);
 
+  // start values without offset.
   fixedpoint::number lerp_x = xmin;
   fixedpoint::number lerp_y = ymin;
   fixedpoint::number lerp_z = fixedpoint::fromfrac #(3)::fp(1, 3'b000, 1);
   
+  // modulo counter to generate pixels.
   always_ff @(posedge clk) begin
     if (break_cond) begin
       if(x == 1279) begin
@@ -62,10 +90,16 @@ module ray_march(input logic clk, input logic BTNC, BTNU, BTND, BTNR, BTNL, sw0,
   
   //----------------------------------------ray generator-----------------------------------------------------------------
   
+  // max ray distance
   fixedpoint::number max_dist = fixedpoint::fromfrac #(1)::fp(10, 1'b0);
-  //fixedpoint:: number epsilon = fixedpoint::fromfrac #(32)::fp(0, 32'b00000000001000001100010010011011);
+  
+  // max ray marching iterations
   logic [8:0] max_iter = 200;
-  localparam mb_max_iter = 5; // times 5 + 5
+  
+  // max Mandelbulb iterations, the SDF has 4 piplines iterations.
+  // This parameter sets the number of reuses of the Mandelbulb SDF.
+  // In total we have (mb_max_iter + 1)*4 = 24 iterations.
+  localparam mb_max_iter = 5;
  
   fixedpoint::message msg;
   fixedpoint::number sel_msg;
@@ -77,90 +111,65 @@ module ray_march(input logic clk, input logic BTNC, BTNU, BTND, BTNR, BTNL, sw0,
   fixedpoint::number y_marched;
   fixedpoint::number z_marched;
   
+  // Here we perform the ray marching
   fixedpoint_mult fm1 (valid[1], clk, msg_out[0].rayd_x, sel_msg, x_marched, valid[2]);
   fixedpoint_mult fm2 (valid[1], clk, msg_out[0].rayd_y, sel_msg, y_marched, valid[3]);
   fixedpoint_mult fm3 (valid[1], clk, msg_out[0].rayd_z, sel_msg, z_marched, valid[4]);
   
-  logic [0:8] is_max_iter;
-  logic [0:8] is_max_dist;
-  logic [0:8] is_epsilon;
-  
-  logic [0:8] break1;
-  logic [0:8] break2;
+  // break_cond vals
+  logic  is_max_iter;
+  logic  is_max_dist;
+  logic  is_epsilon;
+  logic  is_mb_iter;
   
   always_ff @(posedge clk) begin
     if(valid[1]) begin
        msg_out[1] <=  msg_out[0];
        
-       is_max_iter[0] <= msg_out[0].march_iter == max_iter;
-       is_max_dist[0] <= msg_out[0].march_depth > max_dist;
-       is_epsilon[0] <= msg_out[0].logdist <  msg_out[0].epsilon;
-       
        for(int i =0; i<delay-1; i++)begin
         msg_out[i+2] <=  msg_out[i+1];
- 
-        is_max_iter[i+1] <= is_max_iter[i];
-        is_max_dist[i+1] <= is_max_dist[i];
-        is_epsilon[i+1] <=  is_epsilon[i];
        end
        
-       break2[0] <=  msg_out[1].mb_iter == mb_max_iter;
-       break2[1] <= break2[0] ||  msg_out[2].threshold;
+       is_max_iter <= msg_out[delay-1].march_iter == max_iter;
+       is_max_dist <= msg_out[delay-1].march_depth > max_dist;
+       is_epsilon <= msg_out[delay-1].logdist <  msg_out[delay-1].epsilon;
        
-       break1[0] <= is_max_iter[0] || is_max_dist[0];
-       break1[1] <= break1[0] || is_epsilon[1]; 
-       
-       break2[2] <= break1[1] && break2[1];
-       break2[3] <= break2[2];
-       break2[4] <= break2[3];
-       break2[5] <= break2[4];
-       break2[6] <= break2[5];
-       break2[7] <= break2[6];
-       break2[8] <= break2[7];
+       // The trick is to perform ray marching and the reuse of SDF iterations
+       // at the same time. This can be generalized to ervery SDF with a loop inside.
+       is_mb_iter <= msg_out[delay-1].mb_iter == mb_max_iter || msg_out[delay-1].threshold;
     end
   end
   
+  // if break_cond is true than we generate a new ray and drop out
+  // the current data packet from the pipeline.
   always_comb begin
     break_cond = 1;
     if(valid[2])
-      break_cond = (is_max_iter[delay-1] ||  is_max_dist[delay-1] || is_epsilon[delay-1]) && ( msg_out[delay].mb_iter == mb_max_iter || msg_out[delay].threshold);
+      break_cond = (is_max_iter ||  is_max_dist || is_epsilon) && is_mb_iter;
   end
   
-  logic [5:0] pc [3:0] = '{default:0};
-  logic [3:0] wg = '{default:0};
-  logic [19:0] memg [3:0] = '{default:0};
-  
+  // output processed data (colored pixels)
   always_ff @(posedge clk) begin
     if(break_cond && valid[2]) begin
-      pc[0] <= msg_out[delay].steps - 1;
-      pc[1] <= (pc[0] == 0) ? 0 : (sw1 ? 23 - pc[0] : pc[0]);
-      pc[2] <= pc[1];
-      pc[3] <= pc[2];
-      
-      memg[0] <=  msg_out[delay].mem_addr; 
-      memg[1] <= memg[0];
-      memg[2] <= memg[1];
-      memg[3] <= memg[2];
-      
-      wg[0] <=  1; 
-      wg[1] <= wg[0];
-      wg[2] <= wg[1];
-      wg[3] <= wg[2];
+      // ambient occl effect.
+      pixel_color <=  msg_out[delay].steps == 1 ? 0 : 24 - msg_out[delay].steps;
+      wea_reg <= 1;
+      mem_addr_reg <= msg_out[delay].mem_addr;
     end
-    
-    pixel_color <=  pc[3];
-    wea_reg <= wg[3];
-    mem_addr_reg <= memg[3];
   end
   
-  
+  // We define two data-buses and decide if the data can be ray marched
+  // or if the data must through the SDF again.
   fixedpoint::message msg_in0;
   fixedpoint::message delayed_msg0;
   logic next_mb_iter;
   logic next_valid;
   always_ff @(posedge clk) begin
     
+    // The data can leave the SDF if it reached the max iterations or threshold
     next_mb_iter <= msg_out[delay].mb_iter == mb_max_iter || msg_out[delay].threshold || !valid[2];
+    
+    // keep old data if need to use the SDF again.
     delayed_msg0 <= msg_out[delay];
    
     msg.pos_x <= break_cond ? camera_x : camera_x + x_marched;
@@ -192,6 +201,7 @@ module ray_march(input logic clk, input logic BTNC, BTNU, BTND, BTNR, BTNL, sw0,
     msg.logdist <= 0;
     msg.epsilon <= msg_out[delay].march_iter == 0 ? msg_out[delay].logdist>>(13 - 2*sw0) : msg_out[delay].epsilon;
     msg.mb_iter <= 0;
+    
     
     valid[0] <= 1'b1; 
   
@@ -230,19 +240,28 @@ module ray_march(input logic clk, input logic BTNC, BTNU, BTND, BTNR, BTNL, sw0,
     
   end
   
-  //assign data_out = msg_in0;
+  // important to add logdist before marching otherwise we would
+  // calculate the current camera position twice.
   assign sel_msg = msg_out[0].march_depth + msg_out[0].logdist;
+  
+  // Mandelbulb SDF for reuse.
   mandelbulb_sdf ss (next_valid, clk, msg_in0, msg_out[0], valid[1]);
   
+  // send processed data to the framebuffer.
   always_comb begin
     mem_addr = mem_addr_reg;
     rgb = pixel_color;
     wea = wea_reg;
   end
-//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------(User) inputs-----------------------------------------------------
   
   logic [26:0] one_s = 0;
   logic lock = 1;
+  
+  // For higher zoomlevel we used way smaller stepsizes otherwise we will
+  // overshoot the object. With this configuration it is possible to zoom 
+  // out far away to see the whole Mandelbulb.
   
   always_ff @(posedge clk) begin
     if(BTNC == 1 && lock) begin

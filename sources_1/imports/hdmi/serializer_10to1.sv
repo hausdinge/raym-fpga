@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-//`default_nettype none
 
 module serializer_10to1(
     input  wire i_clk,          // parallel clock
@@ -109,5 +108,4 @@ module serializer_10to1(
         .TBYTEIN(1'b0),         // 1-bit input: Byte group tristate
         .TCE(1'b0)              // 1-bit input: 3-state clock enable
     );
-
 endmodule

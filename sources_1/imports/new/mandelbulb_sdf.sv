@@ -1,18 +1,31 @@
 `timescale 1ns / 1ps
 
-//latency: 860 clock cycles
-module mandelbulb_sdf(input logic in_valid, input logic clk, input fixedpoint::message data_in, output fixedpoint::message data_out, output logic out_valid);
-  localparam delay = 60;
+// latency: 815 clock cycles
+module mandelbulb_sdf (
+input logic in_valid, 
+input logic clk, 
+input fixedpoint::message data_in, 
+output fixedpoint::message data_out, 
+output logic out_valid
+);
+  
+  // num latency + 1 of distance_estimator
+  localparam delay = 56;
+  
   fixedpoint::message msg_out[5:0];
-  fixedpoint::message res [0:59];
+  fixedpoint::message res [0:delay-1];
   logic [7:0] valid;
   
   fixedpoint::number logdist;
   
+  // specify the number of pipelined Mandelbulb SDF iterations.
   mb_sdf_iteration msdi_1 (in_valid, clk, data_in, msg_out[0], valid[0]);
   mb_sdf_iteration msdi_2 (valid[0], clk, msg_out[0], msg_out[1], valid[1]);
   mb_sdf_iteration msdi_3 (valid[1], clk, msg_out[1], msg_out[2], valid[2]);
   mb_sdf_iteration msdi_4 (valid[2], clk, msg_out[2], msg_out[3], valid[3]);
+  
+  // We also tried more iterations, but then the synth takes much longer.
+  // 4 iterations are fine. 
   //mb_sdf_iteration msdi_5 (valid[3], clk, msg_out[3], msg_out[4], valid[4]);
   //mb_sdf_iteration msdi_6 (valid[4], clk, msg_out[4], msg_out[5], valid[5]);
   
