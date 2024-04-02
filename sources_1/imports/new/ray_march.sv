@@ -99,7 +99,7 @@ output logic [5:0] rgb         // framebuffer color-ID
   // max Mandelbulb iterations, the SDF has 4 piplines iterations.
   // This parameter sets the number of reuses of the Mandelbulb SDF.
   // In total we have (mb_max_iter + 1)*4 = 24 iterations.
-  localparam mb_max_iter = 5;
+  logic [8:0] mb_max_iter = 5;
  
   fixedpoint::message msg;
   fixedpoint::number sel_msg;
@@ -167,7 +167,7 @@ output logic [5:0] rgb         // framebuffer color-ID
   always_ff @(posedge clk) begin
     
     // The data can leave the SDF if it reached the max iterations or threshold
-    next_mb_iter <= msg_out[delay].mb_iter == mb_max_iter || msg_out[delay].threshold || !valid[2];
+    next_mb_iter <= is_mb_iter || !valid[2];
     
     // keep old data if need to use the SDF again.
     delayed_msg0 <= msg_out[delay];

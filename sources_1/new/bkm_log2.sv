@@ -48,10 +48,10 @@ output logic out_valid
     65'b00000000000000000000000000000000000000000000000000000000000000010*/
   };
   
-  fixedpoint::number x [0:width-1];
+  logic[35:0] x [0:width-1];
   fixedpoint::number z [0:width-1];
   fixedpoint::number y [0:width-1];
-  fixedpoint::number val [0:width-1];
+  logic[35:0] val [0:width-1];
   fixedpoint::number num1_reg [0:6];
   
   // need leading one to normalize number
