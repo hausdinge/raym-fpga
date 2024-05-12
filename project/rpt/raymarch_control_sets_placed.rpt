@@ -1,0 +1,288 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
+| Date         : Sun May 12 14:34:13 2024
+| Host         : DESKTOP-H9C91L2 running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file display_demo_dvi_control_sets_placed.rpt
+| Design       : display_demo_dvi
+| Device       : xc7a200t
+---------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |   210 |
+|    Minimum number of control sets                        |    85 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |   125 |
+| Unused register locations in slices containing registers |   836 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |   210 |
+| >= 0 to < 4        |    10 |
+| >= 4 to < 6        |    14 |
+| >= 6 to < 8        |     6 |
+| >= 8 to < 10       |     4 |
+| >= 10 to < 12      |     3 |
+| >= 12 to < 14      |     4 |
+| >= 14 to < 16      |     3 |
+| >= 16              |   166 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |           53290 |        13356 |
+| No           | No                    | Yes                    |               3 |            1 |
+| No           | Yes                   | No                     |            1369 |          315 |
+| Yes          | No                    | No                     |           54325 |        17938 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |             209 |           57 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++-------------------------------+--------------------------------------------------------------+----------------------------------------------------------+------------------+----------------+--------------+
+|          Clock Signal         |                         Enable Signal                        |                     Set/Reset Signal                     | Slice Load Count | Bel Load Count | Bels / Slice |
++-------------------------------+--------------------------------------------------------------+----------------------------------------------------------+------------------+----------------+--------------+
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1                      |                                                          |                1 |              1 |         1.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1                      |                                                          |                1 |              1 |         1.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_21              |                                                          |                1 |              2 |         2.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_32              |                                                          |                1 |              2 |         2.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_19              |                                                          |                1 |              2 |         2.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_14              |                                                          |                2 |              2 |         1.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_27              |                                                          |                2 |              3 |         1.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_4               |                                                          |                1 |              3 |         3.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_32              |                                                          |                2 |              3 |         1.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1                      |                                                          |                2 |              3 |         1.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_11              |                                                          |                3 |              4 |         1.33 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_24_out                            |                1 |              4 |         4.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/val_reg[4]_569                      |                1 |              4 |         4.00 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/break_cond                                    | raymarcher/fm1/x_reg[10]                                 |                2 |              5 |         2.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_26              |                                                          |                4 |              5 |         1.25 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/val_reg[8]_577                      |                2 |              5 |         2.50 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/val_reg[5]_571                      |                1 |              5 |         5.00 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/break_cond                                    |                                                          |                4 |              5 |         1.25 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_4/tc/tc/sc1/y[1][41]_i_1__13_n_0      |                1 |              5 |         5.00 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/E[0]                                          | raymarcher/fm1/SR[0]                                     |                2 |              5 |         2.50 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_1/tc/tc/sc1/y[1][41]_i_1__1_n_0       |                1 |              5 |         5.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_2/tc/tc/sc1/y[1][41]_i_1__5_n_0       |                1 |              5 |         5.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_16              |                                                          |                2 |              5 |         2.50 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_3/tc/tc/sc1/y[1][41]_i_1__9_n_0       |                1 |              5 |         5.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_17              |                                                          |                4 |              6 |         1.50 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/val_reg[6]_573                      |                1 |              6 |         6.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/next_mb_iter                                  |                4 |              7 |         1.75 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/val_reg[7]_575                      |                1 |              7 |         7.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_21              |                                                          |                3 |              7 |         2.33 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_22              |                                                          |                3 |              7 |         2.33 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_23_out                            |                2 |              8 |         4.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_31              |                                                          |                4 |              8 |         2.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_1               |                                                          |                4 |              9 |         2.25 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_23              |                                                          |                6 |              9 |         1.50 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/x_reg[6]                                      | raymarcher/fm1/y_reg[5]                                  |                3 |             10 |         3.33 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_8               |                                                          |                3 |             11 |         3.67 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/msg[epsilon][64]_i_1_n_0                      |                5 |             11 |         2.20 |
+|  display_clocks_inst/o_clk_1x |                                                              | display_timings_inst/SR[0]                               |                6 |             12 |         2.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_16              |                                                          |                4 |             12 |         3.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_13              |                                                          |                4 |             12 |         3.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_29              |                                                          |                2 |             12 |         6.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_22_out                            |                2 |             14 |         7.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_8               |                                                          |                4 |             14 |         3.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_19              |                                                          |                9 |             15 |         1.67 |
+|  display_clocks_inst/o_clk_1x |                                                              | display_timings_inst/o_sx[0]_i_1_n_0                     |                4 |             16 |         4.00 |
+|  display_clocks_inst/o_clk_1x | display_timings_inst/o_sy                                    | display_clocks_inst/SR[0]                                |                5 |             16 |         3.20 |
+|  display_clocks_inst/o_clk_1x |                                                              |                                                          |               11 |             18 |         1.64 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_1               |                                                          |                7 |             19 |         2.71 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/break_cond                                    | raymarcher/fm1/x_reg[10]_0                               |                5 |             20 |         4.00 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/E[0]                                          |                                                          |               10 |             20 |         2.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_21_out                            |                4 |             23 |         5.75 |
+|  CLK_IBUF_BUFG                | raymarcher/sel                                               | raymarcher/one_s[0]_i_1_n_0                              |                7 |             27 |         3.86 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_20_out                            |                4 |             27 |         6.75 |
+|  display_clocks_inst/o_clk_1x |                                                              | display_clocks_inst/SR[0]                                |               12 |             29 |         2.42 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_26              |                                                          |                9 |             29 |         3.22 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_19_out                            |                5 |             31 |         6.20 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_18_out                            |                4 |             32 |         8.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_7               |                                                          |                8 |             32 |         4.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_5_out                             |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_16_out                            |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_2_out                             |                8 |             33 |         4.12 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/y[27][32]_i_1_n_0                   |                6 |             33 |         5.50 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_11_out                            |                7 |             33 |         4.71 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_7_out                             |                7 |             33 |         4.71 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_10_out                            |                8 |             33 |         4.12 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_17_out                            |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_4_out                             |                8 |             33 |         4.12 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_6_out                             |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_1_out                             |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_3_out                             |                7 |             33 |         4.71 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_9_out                             |                8 |             33 |         4.12 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_12_out                            |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_8_out                             |                9 |             33 |         3.67 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_15_out                            |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_13_out                            |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/lg2/p_14_out                            |                5 |             33 |         6.60 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_5               |                                                          |               12 |             34 |         2.83 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_3/dr_zr/drzr/zr_out[1][37]_i_1__1_n_0 |               13 |             35 |         2.69 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_2/dr_zr/drzr/zr_out[1][37]_i_1__0_n_0 |                7 |             35 |         5.00 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_1/dr_zr/drzr/zr_out[1][37]_i_1_n_0    |                6 |             35 |         5.83 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/msdi_4/dr_zr/drzr/zr_out[1][37]_i_1__2_n_0 |                7 |             35 |         5.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_3               |                                                          |               11 |             38 |         3.45 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_9               |                                                          |               17 |             39 |         2.29 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/invn/leadingone/out_valid_reg_reg[6]_0  |               13 |             39 |         3.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_6               |                                                          |               10 |             39 |         3.90 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_29              |                                                          |               11 |             39 |         3.55 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_15              |                                                          |               11 |             39 |         3.55 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_4               |                                                          |               16 |             40 |         2.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_29              |                                                          |               10 |             46 |         4.60 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_5               |                                                          |               14 |             49 |         3.50 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_3               |                                                          |                5 |             53 |        10.60 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_5               |                                                          |               11 |             57 |         5.18 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/x_reg[6]                                      | raymarcher/fm1/x_reg[10]_0                               |               16 |             61 |         3.81 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_25              |                                                          |               17 |             65 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/fm1/break_cond                                    | raymarcher/fm1/x_reg[6]                                  |               17 |             65 |         3.82 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/ss/ld/approxmult_dst2/val_reg[1]_0            |               18 |             65 |         3.61 |
+|  CLK_IBUF_BUFG                | raymarcher/one_s[0]_i_1_n_0                                  |                                                          |               17 |             65 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_20              |                                                          |                5 |             65 |        13.00 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_18              |                                                          |               17 |             65 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_7               |                                                          |               18 |             70 |         3.89 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_14              |                                                          |               23 |             73 |         3.17 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_2               |                                                          |               21 |             74 |         3.52 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_22              |                                                          |               20 |             77 |         3.85 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_34              |                                                          |               21 |             77 |         3.67 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_2               |                                                          |               21 |             78 |         3.71 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_9               |                                                          |               16 |             78 |         4.88 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN                 |                                                          |               19 |             81 |         4.26 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_22              |                                                          |               20 |             84 |         4.20 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_5               |                                                          |               26 |             93 |         3.58 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_9               |                                                          |               27 |             99 |         3.67 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_12              |                                                          |               28 |            104 |         3.71 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_28              |                                                          |               27 |            105 |         3.89 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_4               |                                                          |               31 |            112 |         3.61 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_30              |                                                          |               29 |            112 |         3.86 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN                 |                                                          |               34 |            114 |         3.35 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_1               |                                                          |               27 |            115 |         4.26 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_13              |                                                          |               22 |            116 |         5.27 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_8               |                                                          |               34 |            121 |         3.56 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_2               |                                                          |               28 |            121 |         4.32 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_17              |                                                          |               34 |            130 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_15              |                                                          |               34 |            130 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_21              |                                                          |               34 |            130 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_23              |                                                          |               34 |            130 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_12              |                                                          |               35 |            131 |         3.74 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_24              |                                                          |               35 |            131 |         3.74 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_27              |                                                          |               35 |            132 |         3.77 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_6               |                                                          |               36 |            135 |         3.75 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_10              |                                                          |               34 |            135 |         3.97 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN                 |                                                          |               38 |            138 |         3.63 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_10              |                                                          |               37 |            138 |         3.73 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_24              |                                                          |               36 |            141 |         3.92 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_3               |                                                          |               39 |            142 |         3.64 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_11              |                                                          |               30 |            144 |         4.80 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_12              |                                                          |               40 |            149 |         3.72 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_18              |                                                          |               44 |            161 |         3.66 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_2               |                                                          |               32 |            164 |         5.12 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_30              |                                                          |               46 |            172 |         3.74 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN                 |                                                          |               46 |            179 |         3.89 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_26              |                                                          |               51 |            195 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_23              |                                                          |               51 |            195 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_22              |                                                          |               51 |            195 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_3               |                                                          |               51 |            196 |         3.84 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_17              |                                                          |               52 |            196 |         3.77 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_25              |                                                          |               52 |            202 |         3.88 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_27              |                                                          |               56 |            203 |         3.62 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_11              |                                                          |               55 |            214 |         3.89 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_10              |                                                          |               58 |            221 |         3.81 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_9               |                                                          |               65 |            251 |         3.86 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_16              |                                                          |               68 |            260 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_21              |                                                          |               68 |            260 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_14              |                                                          |               68 |            260 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_19              |                                                          |               68 |            260 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_25              |                                                          |               69 |            261 |         3.78 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_31              |                                                          |               68 |            262 |         3.85 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_26              |                                                          |               70 |            264 |         3.77 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_18              |                                                          |               71 |            265 |         3.73 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_24              |                                                          |               69 |            267 |         3.87 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_8               |                                                          |               70 |            268 |         3.83 |
+|  CLK_IBUF_BUFG                |                                                              | raymarcher/fm1/break_cond                                |               76 |            273 |         3.59 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_33              |                                                          |               70 |            277 |         3.96 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_18              |                                                          |               73 |            290 |         3.97 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_20              |                                                          |               80 |            308 |         3.85 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_10              |                                                          |               81 |            310 |         3.83 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_19              |                                                          |               83 |            321 |         3.87 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_20              |                                                          |               85 |            325 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_6               |                                                          |               84 |            328 |         3.90 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_7               |                                                          |               89 |            335 |         3.76 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_13              |                                                          |               90 |            357 |         3.97 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_30              |                                                          |               98 |            373 |         3.81 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_14              |                                                          |              100 |            381 |         3.81 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_15              |                                                          |              102 |            390 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_23              |                                                          |              102 |            390 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_16              |                                                          |              102 |            390 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_15              |                                                          |              101 |            390 |         3.86 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_24              |                                                          |              102 |            390 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_28              |                                                          |              103 |            392 |         3.81 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_13              |                                                          |              107 |            425 |         3.97 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_7               |                                                          |              114 |            442 |         3.88 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/ld/lg2/valid2                                  |                                                          |               86 |            444 |         5.16 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_11              |                                                          |              119 |            455 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_25              |                                                          |              119 |            455 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act1/valid_1_repN_20              |                                                          |              119 |            455 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/dr_zr/drzr/p8/p_1_in0                   |                                                          |               93 |            478 |         5.14 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/dr_zr/drzr/p8/p_1_in0                   |                                                          |               80 |            478 |         5.97 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/dr_zr/drzr/p8/p_1_in0                   |                                                          |               83 |            478 |         5.76 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/dr_zr/drzr/p8/p_1_in0                   |                                                          |              106 |            478 |         4.51 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_12              |                                                          |              127 |            491 |         3.87 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_6               |                                                          |              131 |            504 |         3.85 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act1/valid_1_repN_35              |                                                          |              136 |            520 |         3.82 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/ld/approxmult_dst1/valid3                      |                                                          |              103 |            522 |         5.07 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act1/valid_1_repN_17              |                                                          |              138 |            522 |         3.78 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act1/valid_1_repN_4               |                                                          |              182 |            703 |         3.86 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tp/tp/act2/out_valid_reg_reg[36]_0      |                                                          |              673 |            766 |         1.14 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tp/tp/act2/out_valid_reg_reg[36]_0      |                                                          |              680 |            766 |         1.13 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tp/tp/act2/out_valid_reg_reg[36]_0      |                                                          |              675 |            766 |         1.13 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tp/tp/act2/out_valid_reg_reg[36]_0      |                                                          |              690 |            766 |         1.11 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/dr_zr/drzr/approxmult_drzr/val_reg[1]_0 |                                                          |              248 |            802 |         3.23 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/dr_zr/drzr/approxmult_drzr/val_reg[1]_0 |                                                          |              247 |            802 |         3.25 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/dr_zr/drzr/approxmult_drzr/val_reg[1]_0 |                                                          |              235 |            802 |         3.41 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/dr_zr/drzr/approxmult_drzr/val_reg[1]_0 |                                                          |              243 |            802 |         3.30 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tc/tc/sc2/out_valid_reg_reg[41]_0       |                                                          |              608 |            890 |         1.46 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tc/tc/sc2/out_valid_reg_reg[41]_0       |                                                          |              650 |            890 |         1.37 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tc/tc/sc2/out_valid_reg_reg[41]_0       |                                                          |              643 |            890 |         1.38 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tc/tc/sc2/out_valid_reg_reg[41]_0       |                                                          |              651 |            890 |         1.37 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/ld/approxmult_dst3/val_reg[1]_0                |                                                          |              459 |            955 |         2.08 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_3/tc/tc/sc1/valid1_0                      |                                                          |             1297 |           5071 |         3.91 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_1/tc/tc/sc1/valid1_0                      |                                                          |             1285 |           5071 |         3.95 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_4/tc/tc/sc1/valid1                        |                                                          |             1297 |           5071 |         3.91 |
+|  CLK_IBUF_BUFG                | raymarcher/ss/msdi_2/tc/tc/sc1/valid1_0                      |                                                          |             1290 |           5071 |         3.93 |
+|  CLK_IBUF_BUFG                |                                                              |                                                          |            19149 |          78958 |         4.12 |
++-------------------------------+--------------------------------------------------------------+----------------------------------------------------------+------------------+----------------+--------------+
+
+
